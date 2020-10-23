@@ -1,0 +1,33 @@
+extends ../layouts/default
+
+block main
+  h3= title
+  hr
+block content
+  .row
+    .col-md-4
+      form(method="post", action='/outcomes/'+outcome._id+'/tags', role="form")
+        input(type="hidden", name="_csrf", value=csrf_token)
+        .form-group
+          label Patient
+          input.form-control-plaintext(type='text', name="pat", value=outcome.pat.name, readonly)
+        .form-group
+          label Survey
+          input.form-control-plaintext(type='text', name="svy", value=outcome.survey.name, readonly)
+        .form-group
+          label(for='tag') Follow-up Tag
+          select#tag.form-control.sel2-tag(name="tag")
+            option(value="") Please select
+              each t in tags
+                option(value=t, selected=(t == outcome.tag ? "selected" : undefined))= t
+
+
+        button.btn.btn-success.btn-block.mt-5(type='submit') Submit
+
+block foot
+  script.
+    $('.sel2-tag').select2({
+      theme: 'bootstrap4',
+      tags: true,
+      placeholder: 'Please select or create'
+    });

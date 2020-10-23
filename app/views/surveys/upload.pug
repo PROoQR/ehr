@@ -1,0 +1,23 @@
+extends ../layouts/default
+
+block main
+  h3= title
+
+block content
+  - var action = '/surveys'
+  - action += survey.isNew? '' : '/' + survey.id
+
+  .row
+    .col-md-8
+      form(method="post", action='/surveys/upload', role="survey")
+        input(type="hidden", name="_csrf", value=csrf_token)
+
+        .form-group
+          textarea.form-control#json(rows="22", name="body", placeholder='Paste JSON content')
+          p.text-muted 
+            | Learn more? Check out 
+            a(href="https://proqrcode.github.io/prom/", target="_blank") https://proqrcode.github.io/prom/
+        
+        button.btn.btn-primary(type='submit') Submit
+        | &nbsp;
+        a.btn.btn-link(href='/surveys', title="cancel") Cancel

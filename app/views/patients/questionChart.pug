@@ -1,0 +1,87 @@
+extends ../layouts/default
+
+block main
+  h3= title
+
+block content
+  table.table.table-striped.table-bordered
+    thead
+      tr
+        th(scope="col") Survey
+        th(scope="col") Patient
+        th(scope="col") Question
+    tbody
+      tr
+        td= survey.name
+        td= patient.name
+        td= question.name
+  
+  .row
+    .col-md-8
+      table.table.table-striped.table-bordered.mt-5
+        thead
+          tr
+            th(scope="col") Date
+            th(scope="col") Tag
+            th(scope="col") Answer
+        tbody
+          each o in outcomes
+            tr
+              td= formatDate(o.at)
+              td= o.tag
+              td= answer(answers, o[question.code])
+
+    .col-md-4
+      .mt-3
+        .pro-chart
+
+block foot
+  script.
+    function createConfig(y, typ) {
+      return {
+        type: typ,
+        data: {
+          labels: y.labels,
+          datasets: y.datasets
+        },
+        options: {
+          responsive: true,
+          aspectRatio: 1.5,
+          legend: {
+            display: false
+          },
+          title: {
+            display: true,
+            fontColor: '#777',
+            fontSize: 14,
+            text: y.title
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                maxTicksLimit: 4
+              }
+            }]
+          }
+        }
+      };
+    }
+
+    var outsets = !{JSON.stringify(outsets)};
+
+    window.onload = function() {
+      var container = document.querySelector('.pro-chart');
+
+      outsets.forEach(function(y) {
+        var div = document.createElement('div');
+        div.classList.add('chart-container');
+
+        var canvas = document.createElement('canvas');
+        div.appendChild(canvas);
+        container.appendChild(div);
+
+        var ctx = canvas.getContext('2d');
+        var config = createConfig(y, 'horizontalBar');
+        new Chart(ctx, config);
+      });
+    };

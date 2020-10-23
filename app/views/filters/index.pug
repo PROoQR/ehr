@@ -1,0 +1,32 @@
+extends ../layouts/default
+
+block main
+  h3
+    = title
+    small
+      a.ml-5(href="/f/surveys") Add a Filter
+block content
+  if (filters.length)
+    table.table.table-striped.table-bordered
+      thead
+        tr
+          th(scope="col") Form
+          th(scope="col") Question
+          th(scope="col") Answers
+          th(scope="col") Delete
+      tbody
+        each p in filters
+          tr
+            td= p.survey.name
+            td= p.question.name
+            td
+              each a in p.answers
+                div= a.name
+            td
+              a.text-danger(href="/filters/"+p._id+"/delete")
+                i.fa.fa-trash
+
+    a.btn.btn-success.mt-3(href="/filtered") Show Matched Patients
+  else
+    hr
+    p.mt-3.text-muted No Filters.

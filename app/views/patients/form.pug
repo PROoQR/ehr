@@ -1,0 +1,30 @@
+extends ../layouts/default
+
+block main
+  h3= title
+
+block content
+  - var action = '/patients'
+  - action += patient.isNew? '' : '/' + patient._id
+
+  .row
+    .col-md-6
+      form(method="post", action=action, role="form")
+
+        input(type="hidden", name="_csrf", value=csrf_token)
+
+        if (!patient.isNew)
+          input(type="hidden", name="_method", value="PUT")
+        else
+          .form-group
+            label(for='code') Patient Identifier (EMR or EHR)
+            input.form-control#code(type='text', name="_id", value=patient._id)
+
+        .form-group
+          label(for='title') Name
+          input.form-control#title(type='text', name="name", value=patient.name)
+
+        
+        button.btn.btn-primary(type='submit') Save
+        | &nbsp;
+        a.btn.btn-link(href='/patients', title="Cancel") Cancel

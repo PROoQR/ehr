@@ -1,0 +1,50 @@
+extends ../layouts/default
+
+block main
+  h3= title
+  hr
+block content
+  .pro-chart
+block foot
+  script.
+    function createConfig(y, typ) {
+      return {
+        type: typ,
+        data: {
+          labels: y.labels,
+          datasets: y.datasets
+        },
+        options: {
+          responsive: true,
+          aspectRatio: 1.5,
+          legend: {
+            display: true
+          },
+          title: {
+            display: true,
+            fontColor: '#777',
+            fontSize: 14,
+            text: y.title
+          }
+        }
+      };
+    }
+
+    var outsets = !{JSON.stringify(outsets)};
+
+    window.onload = function() {
+      var container = document.querySelector('.pro-chart');
+
+      outsets.forEach(function(y) {
+        var div = document.createElement('div');
+        div.classList.add('chart-container');
+
+        var canvas = document.createElement('canvas');
+        div.appendChild(canvas);
+        container.appendChild(div);
+
+        var ctx = canvas.getContext('2d');
+        var config = createConfig(y, 'doughnut');
+        new Chart(ctx, config);
+      });
+    };

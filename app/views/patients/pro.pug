@@ -1,0 +1,104 @@
+extends ../layouts/default
+
+block main
+  h3
+    = survey.name 
+    span.ml-3 (#{patient.name})
+  hr
+block content
+  if (outdated)
+    .alert.alert-warning Survey form is outdated, please import to update.
+  
+  if (rows.length>1)
+    .pro-chart
+  else
+    .row
+      .col-md-6
+        h4 First Report Summary
+        table.table.table-striped.table-bordered
+          thead
+            tr
+              th(scope="col") Section
+              th(scope="col") Score
+          tbody
+            each p in sections
+              tr
+                td= p.name
+                td= outcome[p.code]
+            tr.table-warning
+              td Total
+              td= outcome.total
+  
+  p
+    | Latest:
+    span.ml-1= formatDate(outcome.at)
+  form(method="post", action='#', role="form")
+    each s in sections
+      .alert.alert-primary
+        strong= s.name
+        span.ml-5= s.intro
+      each it in data.questions        
+        if (it.code.substr(0,2) == s.code && outcome[it.code] )          
+          .border-bottom.my-3
+            h5
+              = it.name
+              small.ml-3
+                a(href="/outcomes/"+outcome._id+"/qcodes/"+it.code)
+                  i.fa.fa-line-chart
+            .form-group
+              each t in it.answers 
+                .form-check.form-check-inline
+                  input.form-check-input(id=it.code+t.code, type='radio', name=it.code, value=t.code, checked=(outcome[it.code].indexOf(t.code) > -1 ? "checked" : undefined))
+                  label.form-check-label(for=it.code+t.code)= opt(t.code, it.answers)
+       
+
+block foot
+  script.
+    function createConfig(y, typ) {
+      return {
+        type: typ,
+        data: {
+          labels: y.labels,
+          datasets: y.datasets
+        },
+        options: {
+          responsive: true,
+          aspectRatio: 1.5,
+          legend: {
+            display: false
+          },
+          title: {
+            display: true,
+            fontColor: '#777',
+            fontSize: 14,
+            text: y.title
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                maxTicksLimit: 4
+              }
+            }]
+          }
+        }
+      };
+    }
+
+    var outsets = !{JSON.stringify(outsets)};
+
+    window.onload = function() {
+      var container = document.querySelector('.pro-chart');
+
+      outsets.forEach(function(y) {
+        var div = document.createElement('div');
+        div.classList.add('chart-container');
+
+        var canvas = document.createElement('canvas');
+        div.appendChild(canvas);
+        container.appendChild(div);
+
+        var ctx = canvas.getContext('2d');
+        var config = createConfig(y, 'line');
+        new Chart(ctx, config);
+      });
+    };

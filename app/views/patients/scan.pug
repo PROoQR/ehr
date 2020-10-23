@@ -1,0 +1,17 @@
+extends ../layouts/default
+
+block main
+  h3.mb-3= patient.name
+
+block content
+
+  .row
+    .col-md-8
+      form(method="post", action='/patients/'+patient._id+'/scan')
+        input(type="hidden", name="_csrf", value=csrf_token)
+
+        .form-group
+          textarea.form-control#desc(rows="10", name="body", placeholder='Scanned Content')
+
+        
+        button.btn.btn-primary(type='submit') Replay

@@ -1,0 +1,18 @@
+nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark
+  a.navbar-brand(href='/') EHR-PRO
+  button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
+    span.navbar-toggler-icon
+  #navbarCollapse.collapse.navbar-collapse
+    ul.navbar-nav.mr-auto
+      li(class=isActive('/surveys') ? 'active nav-item' : 'nav-item')
+        a.nav-link(href="/surveys", title="Forms") Forms
+
+      li(class=isActive('/outcomes') ? 'active nav-item' : 'nav-item')
+        a.nav-link(href="/outcomes", title="Outcomes") Outcomes
+
+      li(class=isActive('/filters') ? 'active nav-item' : 'nav-item')
+        a.nav-link(href="/filters", title="Analyze") Analyze
+    
+    form.form-inline.mt-2.mt-md-0(method="get",action="/search")
+      input.form-control.mr-sm-2(type="text", name="q", placeholder="Patient ID or Name")
+      button.btn.btn-outline-success.my-2.my-sm-0(type="submit") Search to Scan

@@ -1,0 +1,56 @@
+extends ../layouts/default
+
+block main
+  h3= title
+  
+block content
+  if (outcomes.length)
+    table.table.table-striped.table-bordered
+      thead
+        tr
+          th(scope="col") Date
+          th(scope="col") Form
+          th(scope="col") Tag
+          th(scope="col") PID
+          th(scope="col") Patient       
+          th(scope="col") Show
+      tbody
+        each p in outcomes
+          tr
+            td
+              if (p.at)
+                = formatDate(p.at)
+            td
+              a(href="/surveys/"+p.survey._id+"/pros")
+                = p.survey.name
+            td
+              if (p.tag)
+                a(href="/outcomes/"+p._id+"/tags/edit")= p.tag      
+              else
+                a(href="/outcomes/"+p._id+"/tags/edit")
+                  i.fa.fa-tag
+            td
+              a(href="/patients/"+p.pat._id+"/outcomes")
+                = p.pat._id
+            td= p.pat.name
+            
+            td
+              a(href="/outcomes/"+p._id)
+                i.fa.fa-folder-open-o
+
+    if (pages > 1)
+      ul.pagination
+        - var arr = paginate({ currentPage: page, totalPages: pages })
+        each item in arr
+          li.page-item(class=item.isActive && item.type === 'PAGE' && 'active')
+            a.page-link(href=`?page=${item.value}`)
+              case item.type
+                when 'FIRST_PAGE_LINK': | First
+                when 'PREVIOUS_PAGE_LINK': | Previous
+                when 'PAGE': =item.value
+                when 'ELLIPSIS': | ...
+                when 'NEXT_PAGE_LINK': | Next
+                when 'LAST_PAGE_LINK': | Last
+  else
+    hr
+    p.text-muted.my-3 No matched result.

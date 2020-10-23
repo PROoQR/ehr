@@ -1,0 +1,24 @@
+extends ../layouts/default
+
+block main
+  h3= title
+block content
+  if (surveys.length)
+    table.table.table-striped.table-bordered
+      thead
+        tr
+          th(scope="col") Name
+          th(scope="col") Code
+          th(scope="col") Language
+          th(scope="col") Version
+      tbody
+        each p in surveys
+          tr
+            td
+              a(href="/f/surveys/"+p._id)= p.name
+            td= p.code
+            td= p.lang
+            td= p.ver            
+  else
+    hr
+    p.mt-3.text-muted No Filters.

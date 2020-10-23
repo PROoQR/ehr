@@ -1,0 +1,41 @@
+extends ../layouts/default
+
+block main
+  h3= title
+block content
+  if (patients.length)
+    table.table.table-striped.table-bordered
+      thead
+        tr
+          th(scope="col") PID
+          th(scope="col") Name
+          th(scope="col") Last Survey
+          th(scope="col") Date
+      tbody
+        each p in patients
+          tr
+            td
+              a(href="/patients/"+p._id+"/outcomes")= p._id
+            td= p.name
+            td= p.last.name
+            td
+              if (p.last)
+                = formatDate(p.at)
+
+    - if (pages > 1)
+      ul.pagination
+        - var arr = paginate({ currentPage: page, totalPages: pages })
+        each item in arr
+          li.page-item(class=item.isActive && item.type === 'PAGE' && 'active')
+            a.page-link(href=`?page=${item.value}`)
+              case item.type
+                when 'FIRST_PAGE_LINK': | First
+                when 'PREVIOUS_PAGE_LINK': | Previous
+                when 'PAGE': =item.value
+                when 'ELLIPSIS': | ...
+                when 'NEXT_PAGE_LINK': | Next
+                when 'LAST_PAGE_LINK': | Last
+
+  else
+    hr
+    p.mt-3.text-muted No Matched Patients.

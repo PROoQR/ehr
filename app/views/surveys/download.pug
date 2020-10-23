@@ -1,0 +1,11 @@
+extends ../layouts/default
+
+block main
+  h3= title
+
+block content
+  p.mt-5
+    span.mr-3 Please download from,
+    a(href=download_url, target="_blank")= download_url
+
+  p.my-5 If you cannot open the website, it does not mean it was broken, please check if you are directly connected to internet.

@@ -1,0 +1,16 @@
+extends ../layouts/default
+
+block main
+  h3= title
+  hr
+block content
+  form(method="post", action='/f/questions/'+question._id, role="form")
+    input(type="hidden", name="_csrf", value=csrf_token)
+    
+    .form-group
+      each t in answers
+        .form-check
+          input.form-check-input(id=t.code, type='checkbox', name='ids', value=t._id)
+          label.form-check-label(for=t.code)= t.name
+
+    button.btn.btn-primary.mt-3(type='submit') Save

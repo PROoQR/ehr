@@ -1,0 +1,116 @@
+extends ../layouts/default
+
+block main
+  h3
+    = survey.name 
+    span.ml-3 (#{patient.name})
+  hr
+block content
+  if (outdated)
+    .alert.alert-warning Survey form is outdated, please import to update.
+  
+
+  form#acceptFrm(method="post", action='/patients/'+patient._id+'/surveys/'+survey._id, role="form")
+    input(type="hidden", name="_csrf", value=csrf_token)
+    .form-row
+      .col-md-8
+        if (rows.length)
+          .pro-chart
+        else
+          h4 First Report Summary
+          table.table.table-striped.table-bordered.mb-5
+            thead
+              tr
+                th(scope="col") Section
+                th(scope="col") Score
+            tbody
+              each p in sectionScores
+                tr
+                  td= p.section.name
+                  td= p.score
+              tr.table-warning
+                td Total
+                td= totalScore
+
+        each s in sections
+          .alert.alert-primary
+            strong= s.name
+            span.ml-5= s.intro
+          each it in data.questions
+            if (it.code.substr(0,2) == s.code)
+              .border-bottom.my-3
+                h5= it.name
+                .form-group
+                  each t in it.answers
+                    .form-check.form-check-inline
+                      input.form-check-input(id=it.code+t.code, type='radio', name=it.code, value=t.code, checked=(checked(segs, it.code, t.code) ? "checked" : undefined))
+                      label.form-check-label(for=it.code+t.code)= opt(t.code, it.answers)
+      
+      .col-md-3.offset-md-1
+        
+        .form-group
+          label(for='tag') Follow-up Tag
+          select.form-control.sel2-tag(name="tag")
+            option(value="") Please select
+              each t in tags
+                option(value=t)= t
+
+
+        button#accept.btn.btn-success.btn-block.mt-3(type='button') Accept
+
+block foot
+  script.
+    $('.sel2-tag').select2({
+      theme: 'bootstrap4',
+      tags: true,
+      placeholder: 'Please select or create'
+    });
+
+    function createConfig(y, typ) {
+      return {
+        type: typ,
+        data: {
+          labels: y.labels,
+          datasets: y.datasets
+        },
+        options: {
+          responsive: true,
+          aspectRatio: 1.5,
+          legend: {
+            display: false
+          },
+          title: {
+            display: true,
+            fontColor: '#777',
+            fontSize: 14,
+            text: y.title
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                maxTicksLimit: 4
+              }
+            }]
+          }
+        }
+      };
+    }
+
+    var outsets = !{JSON.stringify(outsets)};
+
+    window.onload = function() {
+      var container = document.querySelector('.pro-chart');
+
+      outsets.forEach(function(y) {
+        var div = document.createElement('div');
+        div.classList.add('chart-container');
+
+        var canvas = document.createElement('canvas');
+        div.appendChild(canvas);
+        container.appendChild(div);
+
+        var ctx = canvas.getContext('2d');
+        var config = createConfig(y, 'line');
+        new Chart(ctx, config);
+      });
+    };

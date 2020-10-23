@@ -1,0 +1,44 @@
+extends ../layouts/default
+
+block main
+  h3
+    = title
+    small.ml-3
+      a(href="/patients/"+patient._id+"/scan")
+        i.fa.fa-qrcode
+        span.ml-1 Scan
+  
+block content
+  if (outcomes.length)
+    table.table.table-striped.table-bordered
+      thead
+        tr
+          th(scope="col") Date
+          th(scope="col") Survey
+          th(scope="col") Details
+      tbody
+        each p in outcomes
+          tr
+            td= formatDate(p.at)
+            td= p.survey.name
+            td
+              a(href="/outcomes/"+p._id)
+                i.fa.fa-folder-open-o
+
+    if (pages > 1)
+      ul.pagination
+        - var arr = paginate({ currentPage: page, totalPages: pages })
+        each item in arr
+          li.page-item(class=item.isActive && item.type === 'PAGE' && 'active')
+            a.page-link(href=`?page=${item.value}`)
+              case item.type
+                when 'FIRST_PAGE_LINK': | First
+                when 'PREVIOUS_PAGE_LINK': | Previous
+                when 'PAGE': =item.value
+                when 'ELLIPSIS': | ...
+                when 'NEXT_PAGE_LINK': | Next
+                when 'LAST_PAGE_LINK': | Last
+  else
+    hr
+    p.text-muted.my-3 No matched result.
+    

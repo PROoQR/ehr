@@ -1,0 +1,44 @@
+extends ../layouts/default
+
+block main
+  h3
+    = title
+    small
+      a.ml-5(href="/surveys/upload") Import or Update
+block content
+  if (surveys.length)
+    table.table.table-striped.table-bordered
+      thead
+        tr
+          th(scope="col") Name
+          th(scope="col") Code
+          th(scope="col") Language
+          th(scope="col") Version
+          th(scope="col") Type
+          th(scope="col") QR & Link
+          th(scope="col") JSON
+          th(scope="col") Chart
+          th(scope="col") Responses          
+      tbody
+        each p in surveys
+          tr
+            td= p.name
+            td= p.code
+            td= p.lang
+            td= p.ver
+            td= p.type
+            td
+              a(href="/surveys/"+p._id+"/qrlink")
+                i.fa.fa-qrcode
+            td
+              a(href="/surveys/"+p._id+"/json")
+                i.fa.fa-file
+            td
+              a(href="/surveys/"+p._id+"/pie")
+                i.fa.fa-pie-chart
+            td
+              a(href="/surveys/"+p._id+"/pros")
+                i.fa.fa-list
+  else
+    hr
+    p.mt-3.text-muted No Forms.

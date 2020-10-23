@@ -1,0 +1,33 @@
+extends ../layouts/default
+
+block main
+  h3= title
+block content
+  if (patients.length)
+    table.table.table-striped.table-bordered
+      thead
+        tr
+          th(scope="col") Patient ID
+          th(scope="col") Name
+          th(scope="col") Last Survey
+          th(scope="col") Date
+          th(scope="col") Click to Scan
+      tbody
+        each p in patients
+          tr
+            td
+              a(href="/patients/"+p._id+"/outcomes")= p._id
+            td= p.name
+            td
+              if (p.last)
+                = p.last.name
+            td
+              if (p.last)
+                = formatDate(p.at)
+            td
+              a(href="/patients/"+p._id+"/scan")
+                i.fa.fa-qrcode
+  else
+    hr
+    p.text-muted.my-3 No matched result.
+  a.btn.btn-success(href="/patients/new") Create New Patient

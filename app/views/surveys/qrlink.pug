@@ -1,0 +1,13 @@
+extends ../layouts/default
+
+block main
+  h3= title
+
+block content
+  .row.mt-5
+    .col-md-4
+      h3 QR Code
+      img(src=url)
+
+      h3.mt-5 Link
+      p= link

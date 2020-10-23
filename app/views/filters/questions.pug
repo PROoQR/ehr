@@ -1,0 +1,20 @@
+extends ../layouts/default
+
+block main
+  h3= title
+block content
+  if (questions.length)
+    table.table.table-striped.table-bordered
+      thead
+        tr
+          th(scope="col") Name
+          th(scope="col") Code
+      tbody
+        each p in questions
+          tr
+            td
+              a(href="/f/questions/"+p._id)= p.name
+            td= p.code         
+  else
+    hr
+    p.mt-3.text-muted No Filters.
