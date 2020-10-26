@@ -105,9 +105,10 @@ exports.scanPost = async(function*(req, res) {
   const askScores = [];
   let totalScore = 0;
   for (var i = 1; i < segs.length; i++) {
-    const seg = segs[i].split(':');
-    const ask = yield Question.findOne({survey:survey, code:seg[0]});
-    const replies = yield Answer.find({ask: ask, code: {$in: toArray(seg[1])}});
+    const seg = segs[i];
+
+    const ask = yield Question.findOne({survey:survey, code:seg.substr(0,3)});
+    const replies = yield Answer.find({ask: ask, code: {$in: toArray(seg.substr(3))}});
     let askScore = 0;
     for (var j = 0; j < replies.length; j++) {
       const r = replies[j];

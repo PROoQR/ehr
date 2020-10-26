@@ -116,7 +116,7 @@ exports.uploadPost = async(function*(req, res) {
 
 exports.qrlink = async(function*(req, res) {  
   const survey = req.survey;
-  const link = 'https://proqrcode.github.io/prom/'+survey.lang+'/'+survey.code+'.html';
+  const link = 'https://prooqr.github.io/prom/'+survey.lang+'/'+survey.code+'.html';
 
   QRCode.toDataURL(link, function (err, url) {
     res.render('surveys/qrlink', {

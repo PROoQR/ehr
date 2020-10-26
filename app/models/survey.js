@@ -16,7 +16,7 @@ const SurveySchema = new Schema({
   lang:  { type: String, default: '' },
   ver:   { type: Number, default: 0 },
   name:  { type: String, default: '' },
-  type:  { type: String, default: 'flat' },
+  type:  { type: String, default: 'FLAT' },
   body:  { type: String, default: '' },
   at:    { type: Date,   default: Date.now }
 });
